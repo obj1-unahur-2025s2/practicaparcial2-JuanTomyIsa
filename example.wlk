@@ -62,19 +62,44 @@ class Mascota{
 class Localidad{
   var habitantes = new List()
 
+  method habitantes() = habitantes 
+
   method potencialOfensivoEjercito() = habitantes.forEach({h=>h.potencialOfensivo()}).sum() 
 
   method agregarHabitante(unHabitante) {
     habitantes.add(unHabitante)
   }
+
+  method invadir(enemigo) {
+    if (self.potencialOfensivoEjercito() > enemigo.potencialOfensivoEjercito()){
+      enemigo.serInvadida(self)
+    }
+  }
+
+  method serInvadida(enemy)
 }
 
 class Aldea inherits Localidad{
   const tamaño
   method cantidadMaximaDeHabitantes() = tamaño 
-  
+
+  override method agregarHabitante(unHabitante) {
+    if (tamaño > habitantes.size()) {habitantes.add(unHabitante)}
+  }
+  override method serInvadida(enemy) {
+    if (habitantes.size() < enemy.habitantes().size()){
+      //sort y take
+    } else {
+      habitantes = enemy.habitantes()
+    }
+  }
 }
 
-class Ciudad inherits Localidad{}
+class Ciudad inherits Localidad{
+  override method potencialOfensivoEjercito() = habitantes.forEach({h=>h.potencialOfensivo()}).sum() + 300
+  override method serInvadida(enemy) {
+    habitantes = enemy.habitantes()
+  }
+}
 
 
